@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【指導案・操作ガイド】生活単元学習「段ボールハウスを飾り付けよう」（100均特化版）</title>
+  <style>
+    :root {
+      --primary: #e8590c;
+      --secondary: #1971c2;
+      --accent: #ffd43b;
+      --dark: #212529;
+      --gray: #495057;
+      --light-bg: #f8f9fa;
+      --border: #dee2e6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic", sans-serif;
+      line-height: 1.7;
+      color: var(--dark);
+      background: #e9ecef;
+      padding: 24px;
+    }
+
+    .document-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 48px 56px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    /* 印刷ボタンバー（画面表示時のみ） */
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff4e6;
+      border: 2px solid #ffd8a8;
+      padding: 14px 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .action-bar-text {
+      font-weight: 700;
+      color: #d9480f;
+      font-size: 0.95rem;
+    }
+
+    .btn-print {
+      background: #e8590c;
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(232, 89, 12, 0.3);
+      transition: background 0.15s;
+    }
+
+    .btn-print:hover {
+      background: #d9480f;
+    }
+
+    /* 文書ヘッダー */
+    .doc-header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+
+    .doc-tag {
+      display: inline-block;
+      background: #ffe3e3;
+      color: #c92a2a;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 3px 12px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+    }
+
+    h1.doc-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+
+    .doc-summary {
+      font-size: 1.05rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* セクション見出し */
+    h2.section-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #d9480f;
+      border-left: 6px solid #d9480f;
+      padding-left: 12px;
+      margin: 36px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3.sub-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #343a40;
+      margin: 24px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      font-size: 0.98rem;
+    }
+
+    /* リスト */
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+    }
+
+    /* 情報カード・コールアウト */
+    .callout-box {
+      background: var(--light-bg);
+      border-left: 4px solid #ff922b;
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+
+    .callout-box.tip {
+      background: #e7f5ff;
+      border-left-color: #339af0;
+    }
+
+    .callout-box.success {
+      background: #ebfbee;
+      border-left-color: #40c057;
+    }
+
+    .callout-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #212529;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ステップカード */
+    .step-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .step-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 8px;
+    }
+
+    .step-badge {
+      background: #e8590c;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 0.85rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .step-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #212529;
+    }
+
+    /* 表 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f3f5;
+      font-weight: 800;
+      color: #495057;
+    }
+
+    /* 印刷用スタイル（A4印刷時） */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+
+      .document-container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .action-bar {
+        display: none !important;
+      }
+
+      h2.section-title {
+        break-after: avoid;
+        margin-top: 24px;
+      }
+
+      .step-card {
+        break-inside: avoid;
+      }
+
+      table {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="document-container">
+
+    <!-- 印刷アクションバー -->
+    <div class="action-bar">
+      <div class="action-bar-text">
+        📄 先生用印刷用ページです。そのままA4印刷またはPDF保存ができます。
+      </div>
+      <button class="btn-print" onclick="window.print()">
+        🖨️ このガイドを印刷 / PDF保存
+      </button>
+    </div>
+
+    <!-- 文書ヘッダー -->
+    <header class="doc-header">
+      <span class="doc-tag">知的障害特別支援学校 生活単元学習 指導案 ＆ アプリ操作ガイド</span>
+      <h1 class="doc-title">生活単元学習「段ボールハウスを飾り付けよう」<br>100均（ダイソー・セリア）特化版 Webアプリ ガイド</h1>
+      <p class="doc-summary">
+        本資料は、小学部・中学部・高等部の生活単元学習「段ボールハウスを飾り付けよう」において、児童生徒が自分で飾り付けに必要な材料を100円ショップ（ダイソー／セリア）から検索して選び、条件（個数・金額）を意識しながらワークシートを作成するための授業実践マニュアルです。
+      </p>
+    </header>
+
+    <!-- 1. 単元の目標と本アプリのねらい -->
+    <section>
+      <h2 class="section-title">🎯 1. 単元の目標と本アプリのねらい</h2>
+      <div class="step-card">
+        <h3 class="sub-title">【単元の目標】</h3>
+        <ul>
+          <li><strong>活動：</strong> 段ボールハウスを飾り付けよう</li>
+          <li><strong>ねらい：</strong> 段ボールハウスを飾り付けるものとして、アプリで検索し買うものを探したり、選択したりする。</li>
+          <li><strong>関心・意欲・態度：</strong> 自分が作りたい段ボールハウスのイメージ（屋根、壁、ドアなど）を持ち、意欲的に材料を探す。</li>
+          <li><strong>思考・判断・表現：</strong> 決められた「個数」や「予算（上限金額）」を確かめながら、必要なものを吟味して選択する。</li>
+        </ul>
+      </div>
+
+      <div class="callout-box tip">
+        <div class="callout-title">💡 特別支援教育における本アプリの特長（UD対応）</div>
+        <ul>
+          <li><strong>段階的な4段階選択：</strong> 「①ばしょ ➜ ②しゅるい ➜ ③おみせ（ダイソー/セリア） ➜ ④商品検索」と段階を踏むことで、見通しを持って探せます。</li>
+          <li><strong>2枠基本 ＆ 「もう1枚つくる」対応：</strong> ワークシートは子どもにとって分かりやすい「1シート2枠」を基本とし、たくさん買いたい場合は「もう1枚つくる」で複数シートを追加・合算管理できます。</li>
+          <li><strong>先生用条件設定：</strong> 右上の「⚙️ せってい」から、上限金額（300円/500円/1000円）や個数（2個/4個/6個）を児童の実態に合わせてワンタッチで変更できます。</li>
+          <li><strong>全ひらがな表記 ＆ 税込表示：</strong> 難しい漢字をなくし、価格も実際のレジと同じ「110円・220円・330円」に対応しています。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2. アプリの構成と授業準備 -->
+    <section>
+      <h2 class="section-title">📱 2. アプリの準備とiPadでの設定</h2>
+      <h3 class="sub-title">【iPadのホーム画面に追加する（推奨）】</h3>
+      <ol>
+        <li>児童のiPadの <strong>Safari</strong> でアプリのURLを開きます。</li>
+        <li>共有ボタン（四角から矢印のアイコン）をタップし、<strong>「ホーム画面に追加」</strong> を選びます。</li>
+        <li>全画面（フルスクリーン）のアプリ感覚で起動できるようになります。</li>
+      </ol>
+
+      <div class="callout-box success">
+        <div class="callout-title">💡 【授業のオススメ設定】iPadの「Split View（画面2分割）」</div>
+        <p>iPadの画面上部の「…」ボタンから、画面左側に「このWebアプリ」、右側に「Safari（Google検索）」を並べて2分割表示しておくと、タブの切り替え不要でスクショの撮影から取り込みが非常にスムーズに行えます！</p>
+      </div>
+    </section>
+
+    <!-- 3. 授業のステップと操作手順 -->
+    <section>
+      <h2 class="section-title">🛒 3. 授業のステップと児童の操作手順</h2>
+
+      <div class="step-card">
+        <div class="step-card-header">
+          <span class="step-badge">ステップ①</span>
+          <span class="step-name">ばしょを えらぶ（大項目・5分類）</span>
+        </div>
+        <p>「やね」「かべ」「どあ・まど」「へやのなか」「そのほか」の5つの大きなカードから、飾り付けたい場所を1つタップします。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-card-header">
+          <span class="step-badge">ステップ②</span>
+          <span class="step-name">しゅるいを えらぶ（中項目・6分類）</span>
+        </div>
+        <p>「しーる」「ますきんぐてーぷ」「もーる・りぼん」「おはながみ・がようし」「らいと・きらきらかざり」「じぶんで もじをいれる」から大まかなアイテムの種類を選びます。</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-card-header">
+          <span class="step-badge">ステップ③</span>
+          <span class="step-name">おみせを えらぶ（ダイソー 🔴 / セリア 🟢）</span>
+        </div>
+        <ul>
+          <li>「ダイソーで さがす」「セリアで さがす」のどちらかを押すと、自動的に検索ワードが作られ（例：「ダイソー やね シール 画像」）、Google画像検索が別タブで立ち上がります。</li>
+          <li>お気に入りの商品を見つけてiPadでスクリーンショットを撮影します。</li>
+          <li>アプリに戻ると、「📁 iPadで とった すくしょをつかう！」ボタンがオレンジ色にピカピカ点滅して待っているので、タップして撮影した写真を取り込みます。</li>
+        </ul>
+      </div>
+
+      <div class="step-card">
+        <div class="step-card-header">
+          <span class="step-badge">ステップ④</span>
+          <span class="step-name">きりとり・ねだん（トリミング ＆ 価格選択）</span>
+        </div>
+        <ul>
+          <li><strong>「✂️ かんたんきりとり」：</strong> 四角い枠を指でスライドしたり、「➕ おおきく」「➖ ちいさく」ボタンで調整して、商品の部分だけをきれいに切り抜けます。</li>
+          <li><strong>お値段選択：</strong> 「110えん」「220えん」「330えん」のボタンスイッチをタップして価格を選択（基本は110円）。</li>
+          <li>「📥 あるばむに いれる！」を押すと、アルバムに保存されて自動的にワークシートへ進みます。</li>
+        </ul>
+      </div>
+
+      <div class="step-card">
+        <div class="step-card-header">
+          <span class="step-badge">ステップ⑤</span>
+          <span class="step-name">わーくしーと（2枠基本 ＋ 「もう1枚つくる」対応）</span>
+        </div>
+        <ul>
+          <li>ワークシートは「1こめ」「2こめ」の分かりやすい2枠構成です。</li>
+          <li>3つ以上買いたいときは、<strong>「📄 もう１まい つくる」ボタン</strong> を押すと2枚目（3こめ、4こめ）のシートが追加されます。</li>
+          <li>上部のタブ（シート①、シート②…）でいつでもシートを行き来できます。</li>
+          <li>全シートの合計金額や個数がリアルタイムに合算判定されます（例：「あと 170えん かえるよ⭕」）。</li>
+          <li>右下の「なまえ」を押すと五十音キーボードで自分の名前を入力できます。</li>
+        </ul>
+      </div>
+
+      <div class="step-card">
+        <div class="step-card-header">
+          <span class="step-badge">ステップ⑥</span>
+          <span class="step-name">かんせい！ ＆ A4高画質画像保存</span>
+        </div>
+        <ul>
+          <li>「🌟 できた！」を押すと、ファンファーレと紙吹雪で達成感を演出！</li>
+          <li>作成した全ワークシートが高画質A4画像（PNG）として生成されます。</li>
+          <li>「📥 わーくしーとの がぞうを ほぞんする！」でiPadに保存し、そのままプリンターで印刷できます。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4. 指導計画例 -->
+    <section>
+      <h2 class="section-title">📋 4. 本時の指導計画例（45分）</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 15%;">段階・時間</th>
+            <th style="width: 45%;">学習活動（児童生徒の動き）</th>
+            <th style="width: 40%;">指導上の留意点・支援（教師の働きかけ）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>導入</strong><br>（10分）</td>
+            <td>
+              1. 本時のめあてを確認する。<br>
+              「段ボールハウスを飾り付けるものを、100均（ダイソー・セリア）で探そう（〇〇円まで）」<br>
+              2. 飾り付けたい場所（屋根、壁、ドアなど）を考える。
+            </td>
+            <td>
+              ・段ボールハウスの実物を見せ、どこをどんな風に飾りたいか見通しを持たせる。<br>
+              ・児童に合わせてアプリ右上の「⚙️ せってい」で個数や上限金額を調整しておく。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>展開</strong><br>（25分）</td>
+            <td>
+              3. アプリで「場所」と「種類」を選び、ダイソーまたはセリアで商品を探す。<br>
+              4. スクショを撮ってアプリに取り込み、枠に合わせて切り抜く。<br>
+              5. ワークシートに貼り、合計金額を確かめる。<br>
+              ・さらに買いたい場合は「もう1枚つくる」でシートを追加する。<br>
+              6. 名前を入力する。
+            </td>
+            <td>
+              ・ダイソーとセリアで写真の雰囲気が異なるため、好きな方を選ばせる。<br>
+              ・切り取り操作が難しい児童には「➕ おおきく」「➖ ちいさく」ボタンを促す。<br>
+              ・予算をオーバーした場合は、別のお菓子/材料に変えるよう助言する。
+            </td>
+          </tr>
+          <tr>
+            <td><strong>まとめ</strong><br>（10分）</td>
+            <td>
+              7. 「できた！」を押して完成を確認する。<br>
+              8. ワークシート画像を保存し、お互いに買いたいものを発表する。
+            </td>
+            <td>
+              ・全シートを印刷して児童に配り、次の時間の実物工作・実際の買い物学習へと繋げる。
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>だんボールハウスを かざりつけよう！ - 100きんで かいもの</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 紙吹雪用Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- アプリヘッダー -->
+  <header class="app-header">
+    <div class="header-title">
+      🏠 だんボールハウスを かざりつけよう！
+      <span class="badge">とくべつしえん</span>
+    </div>
+    <div class="header-actions">
+      <a href="teacher-guide.html" target="_blank" class="btn-header-guide" title="せんせいよう しどうあん・がいど">
+        📋 せんせい用
+      </a>
+      <button id="btnHeaderSettings" class="btn-header-settings" aria-label="じょうけんせってい">
+        ⚙️ せってい
+      </button>
+      <button id="btnHeaderAlbum" class="btn-header-album" aria-label="あるばむをみる">
+        📸 あるばむ
+        <span id="albumCountBadge" class="album-count-badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ステップ進行バー（6ステップ） -->
+  <nav class="step-indicator-bar" aria-label="がくしゅうの すてっぷ">
+    <div id="chipStep1" class="step-chip active">① ばしょ</div>
+    <div id="chipStep2" class="step-chip">② しゅるい</div>
+    <div id="chipStep3" class="step-chip">③ おみせ</div>
+    <div id="chipStep4" class="step-chip">④ きりとり</div>
+    <div id="chipStep5" class="step-chip">⑤ わーくしーと</div>
+    <div id="chipStep6" class="step-chip">⑥ かんせい！</div>
+  </nav>
+
+  <!-- メイン操作ステージ -->
+  <main class="main-stage">
+
+    <!-- ==================== ステップ①：大項目（場所選択） ==================== -->
+    <section id="viewStep1" class="step-view active">
+      <div class="guide-header">
+        <div class="guide-text">
+          <span>🏠</span>
+          <span>どこを かざりつける？ ばしょを えらんでね！</span>
+        </div>
+      </div>
+
+      <div class="places-grid" id="placeGrid">
+        <!-- JSで動的生成：やね、かべ、どあ・まど、へやのなか、そのほか -->
+      </div>
+    </section>
+
+    <!-- ==================== ステップ②：中項目（アイテム種類選択） ==================== -->
+    <section id="viewStep2" class="step-view">
+      <div class="guide-header">
+        <div class="guide-text">
+          <span>🎀</span>
+          <span>なにを つかう？ しゅるいを えらんでね！</span>
+        </div>
+      </div>
+
+      <!-- ナビゲーションバー -->
+      <div class="selection-nav-bar">
+        <div id="activePlaceBadge" class="nav-badge place">🏠 やね</div>
+        <button id="btnBackToStep1" class="btn-retake">↩️ ばしょを かえる</button>
+      </div>
+
+      <div class="item-types-grid" id="itemTypeGrid">
+        <!-- JSで動的生成：しーる、てーぷ、もーる、おはな、らいと、じぶんでもじをいれる -->
+      </div>
+    </section>
+
+    <!-- ==================== ステップ③：お店選択 ＆ Google画像検索へジャンプ ==================== -->
+    <section id="viewStep3" class="step-view">
+      <div class="guide-header">
+        <div class="guide-text">
+          <span>🔍</span>
+          <span id="step3GuideText">どっちの おみせで さがす？ えらぶと Googleが ひらくよ！</span>
+        </div>
+      </div>
+
+      <!-- 選択状況バー -->
+      <div class="selection-nav-bar">
+        <div class="nav-badges-row">
+          <div id="step3PlaceBadge" class="nav-badge place">🏠 やね</div>
+          <div id="step3TypeBadge" class="nav-badge type">🌟 しーる</div>
+        </div>
+        <button id="btnBackToStep2" class="btn-retake">↩️ もどる</button>
+      </div>
+
+      <!-- 検索ワード確認・編集バー -->
+      <div class="search-word-bar">
+        <div class="search-word-label">けんさくワード：</div>
+        <div id="searchWordPreview" class="search-word-text">シール ステッカー</div>
+        <button id="btnEditSearchWord" class="btn-edit-word">✏️ もじを かえる</button>
+      </div>
+
+      <!-- 2大100均（ダイソー / セリア）選択ボタン -->
+      <div class="store-choice-container">
+        <!-- ダイソー -->
+        <button id="btnStoreDaiso" class="btn-store-card daiso" type="button">
+          <div class="store-card-logo">🔴 DAISO</div>
+          <div class="store-card-title">ダイソーで さがす！</div>
+          <div class="store-card-sub">Googleで がぞうが ひらくよ</div>
+        </button>
+
+        <!-- セリア -->
+        <button id="btnStoreSeria" class="btn-store-card seria" type="button">
+          <div class="store-card-logo">🟢 Seria</div>
+          <div class="store-card-title">セリアで さがす！</div>
+          <div class="store-card-sub">Googleで がぞうが ひらくよ</div>
+        </button>
+      </div>
+
+      <!-- iPad写真読み込みバナー（Google検索後にスクショを読み込むボタン） -->
+      <div class="external-search-banner">
+        <button id="btnUploadScreenshot" class="btn-upload-photo" style="width:100%;">
+          <span style="font-size:1.4rem;">📁</span>
+          <span id="uploadBtnLabel">iPadで とった すくしょ（しゃしん）をつかう！</span>
+        </button>
+        <input type="file" id="fileUploadInput" accept="image/*" style="display:none;">
+      </div>
+
+      <!-- おすすめヒント候補（タップで即検索可能） -->
+      <div class="sample-chips-section">
+        <div class="sample-chips-title">💡 たとえば こんなものがあるよ（おすと けんさくできるよ）：</div>
+        <div class="sample-chips-container" id="sampleChipsContainer">
+          <!-- JSで動的生成 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ステップ④：写真切り取り ＆ お値段設定 ==================== -->
+    <section id="viewStep4" class="step-view">
+      <div class="guide-header">
+        <div class="guide-text">
+          <span>✂️</span>
+          <span>しゃしんを きりとって、ねだんを えらぼう！</span>
+        </div>
+      </div>
+
+      <div class="crop-preview-box">
+        <!-- 自動トリミングプレビュー -->
+        <div class="cropped-image-container" id="croppedImageContainer">
+          <button id="btnLaunchCrop" class="crop-badge-decor" title="おしてきりとる">
+            ✂️ かんたんきりとり
+          </button>
+          <div id="cropPreviewContent" style="width:100%; height:100%;"></div>
+        </div>
+
+        <!-- お値段・なまえ設定カード -->
+        <div class="auto-price-card">
+          <div id="cropItemName" class="snack-name-display">かざりつけアイテム</div>
+          <div class="price-choose-guide">💰 ねだんを えらんでね（ぜいこみ）：</div>
+          <div class="price-selector-row">
+            <button type="button" class="btn-price-option active" data-price="110">110 えん</button>
+            <button type="button" class="btn-price-option" data-price="220">220 えん</button>
+            <button type="button" class="btn-price-option" data-price="330">330 えん</button>
+          </div>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="crop-actions-row">
+          <button id="btnRetakeItem" class="btn-retake">↩️ さがしなおす</button>
+          <button id="btnAddAlbum" class="btn-add-album">
+            📥 あるばむに いれる！
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ステップ⑤：ワークシート画面（2枠基本 ＋ 追加対応） ==================== -->
+    <section id="viewStep5" class="step-view">
+      <div class="guide-header">
+        <div class="guide-text">
+          <span>📝</span>
+          <span>わーくしーとに しゃしんを はろう！</span>
+        </div>
+      </div>
+
+      <div class="worksheet-layout-wrapper">
+
+        <!-- 条件リアルタイム判定バナー -->
+        <div class="condition-status-banner">
+          <div class="condition-row">
+            <div id="pillCountCondition" class="condition-pill ok">
+              <span>① ぜんぶの かず：</span>
+              <strong id="badgeCurrentCount">0</strong> / <span id="badgeMaxCount">4</span>こ まで
+            </div>
+            <div class="total-price-meter">
+              <span>ごうけい：</span>
+              <span id="badgeTotalPrice" class="val">0</span>
+              <span>えん</span>
+            </div>
+          </div>
+          <div class="condition-row">
+            <div id="pillPriceCondition" class="condition-pill ok">
+              <span>② おかね：ぜんぶで <span id="badgeMaxPrice">500</span>円まで</span>
+              <span id="priceStatusText" style="margin-left:8px;">（あと 500えん かえるよ⭕）</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 複数ワークシート切り替えタブバー -->
+        <div class="sheet-tabs-bar">
+          <div class="sheet-tabs-list" id="sheetTabsList">
+            <!-- JSで動的生成：シート①、シート② ... -->
+          </div>
+          <button id="btnAddAnotherSheet" class="btn-add-sheet">
+            📄 もう１まい つくる
+          </button>
+        </div>
+
+        <!-- ワークシート用紙本体（添付PDF完全再現） -->
+        <div class="worksheet-sheet" id="worksheetSheet">
+          <!-- 手描き枠の装飾 -->
+          <div class="worksheet-doodle-frame"></div>
+          <div class="doodle-icon" style="top:12px; left:12px;">🏠</div>
+          <div class="doodle-icon" style="top:12px; right:12px;">⭐</div>
+          <div class="doodle-icon" style="bottom:12px; left:12px;">✂️</div>
+          <div class="doodle-icon" style="bottom:12px; right:12px;">✏️</div>
+
+          <!-- ヘッダー：タイトル ＆ 条件 -->
+          <div class="worksheet-header-area">
+            <h1 class="worksheet-main-title">だんボールハウスを かざりつけよう！</h1>
+            <div class="worksheet-conditions-box">
+              <div><span class="num">①</span> ぜんぶで <strong><span id="sheetCondCount">4</span>こ まで</strong></div>
+              <div><span class="num">②</span> ぜんぶで <strong><span id="sheetCondPrice">500</span>円 まで</strong></div>
+            </div>
+          </div>
+
+          <!-- 中央：100きんで かいたいもの（黒枠＆黄色のマスキングテープ） -->
+          <div class="snack-target-card-box">
+            <div class="masking-tape-decor"></div>
+            <h2 class="target-card-title">100きんで かいたいもの <span id="currentSheetBadgeTitle" class="sheet-sub-badge">（１まいめ）</span></h2>
+
+            <!-- お菓子/飾り付けスロット（2個固定スロット） -->
+            <div class="snack-paste-slots">
+              <!-- スロット1 -->
+              <div id="slot1" class="snack-slot-item">
+                <div class="slot-empty-prompt">
+                  <span class="icon">➕</span>
+                  <span id="slot1Label">１こめ</span>
+                  <button class="btn-slot-choose" data-slot="0">しゃしんを えらぶ</button>
+                </div>
+              </div>
+
+              <!-- スロット2 -->
+              <div id="slot2" class="snack-slot-item">
+                <div class="slot-empty-prompt">
+                  <span class="icon">➕</span>
+                  <span id="slot2Label">２こめ</span>
+                  <button class="btn-slot-choose" data-slot="1">しゃしんを えらぶ</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右下：なまえ枠 -->
+          <div class="worksheet-footer-area">
+            <div class="name-banner-box" id="nameBannerBox">
+              <span class="name-banner-label">なまえ</span>
+              <span class="name-banner-val" id="nameDisplayVal">（おしていれる）</span>
+              <span class="btn-name-edit">✏️</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ワークシート下部アクション -->
+        <div class="worksheet-actions-bar">
+          <button id="btnFindMoreItems" class="btn-find-more">
+            🔍 べつのものを さがしにいく
+          </button>
+          <button id="btnCompleteDone" class="btn-complete-done">
+            🌟 できた！
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== ステップ⑥：完成＆画像保存画面 ==================== -->
+    <section id="viewStep6" class="step-view">
+      <div class="completed-banner-box">
+        <div style="font-size: 4rem;">🎉</div>
+        <h2 class="completed-title">かんせい！ すごいね！</h2>
+        <p id="completedDescText" style="font-size:1.25rem; font-weight:700; color:#495057;">
+          じょうけんいないで えらぶことができたよ！
+        </p>
+
+        <!-- 完成したワークシート全ページのプレビュー表示コンテナ -->
+        <div class="final-sheets-container" id="finalSheetsContainer">
+          <!-- JSで全シート画像を並べて描画 -->
+        </div>
+
+        <!-- 保存ボタン -->
+        <button id="btnDownloadAllSheets" class="btn-download-img">
+          📥 わーくしーとの がぞうを ほぞんする！
+        </button>
+
+        <div style="display:flex; gap:14px; margin-top:10px;">
+          <button id="btnBackToWorksheet" class="btn-retake">✏️ なおす</button>
+          <button id="btnRestartApp" class="btn-restart-app">🔄 はじめから やりなおす</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== アプリ内アルバム（モーダル） ==================== -->
+  <div id="albumModalOverlay" class="album-modal-overlay">
+    <div class="album-sheet-content">
+      <div class="album-sheet-header">
+        <h3 class="album-sheet-title">📸 あぷりの あるばむ（えらんでね）</h3>
+        <button id="btnCloseAlbum" class="btn-close-album">✕</button>
+      </div>
+      <div style="display:flex; justify-content:center; margin-bottom:8px;">
+        <button id="btnAlbumUploadPhoto" class="btn-upload-photo" style="width:100%; max-width:400px;">
+          <span style="font-size:1.3rem;">📁</span>
+          <span>iPadの かめらろーるから えらぶ</span>
+        </button>
+      </div>
+      <div id="albumItemsGrid" class="album-items-grid">
+        <!-- JSでアルバム写真一覧を描画 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 五十音ソフトキーボードモーダル ==================== -->
+  <div id="keyboardModalOverlay" class="keyboard-modal-overlay">
+    <div class="keyboard-modal-box">
+      <h3 id="keyboardModalTitle" class="keyboard-header-title">ひらがなを えらんでね</h3>
+      <div class="keyboard-preview-display">
+        <span id="keyboardPreviewText"></span>
+        <span style="font-size:1rem; color:#868e96;">✏️</span>
+      </div>
+      <div class="kana-keyboard-grid" id="kanaKeyboardGrid">
+        <!-- JSで五十音キーを生成 -->
+      </div>
+      <div class="keyboard-control-row">
+        <button id="btnKbClear" class="btn-kb-action btn-kb-clear">ぜんぶけす</button>
+        <button id="btnKbDelete" class="btn-kb-action btn-kb-delete">１もじけす ⌫</button>
+        <button id="btnKbSubmit" class="btn-kb-action btn-kb-submit">けってい ✔️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 先生用条件設定モーダル ==================== -->
+  <div id="settingsModalOverlay" class="settings-modal-overlay">
+    <div class="settings-modal-box">
+      <div class="settings-modal-header">
+        <h3 class="settings-modal-title">⚙️ 先生用 条件設定</h3>
+        <button id="btnCloseSettings" class="btn-close-album">✕</button>
+      </div>
+      <div class="settings-modal-body">
+        <!-- おかねの上限 -->
+        <div class="setting-group">
+          <label class="setting-label">💰 おかねの上限（合計金額）</label>
+          <div class="setting-options-row" id="settingPriceOptions">
+            <button type="button" class="btn-setting-chip" data-val="300">300円</button>
+            <button type="button" class="btn-setting-chip active" data-val="500">500円（標準）</button>
+            <button type="button" class="btn-setting-chip" data-val="1000">1000円</button>
+          </div>
+          <div class="setting-custom-row">
+            <span>または直接入力：</span>
+            <input type="number" id="settingCustomPrice" placeholder="500" min="100" max="10000" step="10"> 円
+          </div>
+        </div>
+
+        <!-- 個数の上限 -->
+        <div class="setting-group">
+          <label class="setting-label">📦 個数の上限（ぜんぶで何個まで）</label>
+          <div class="setting-options-row" id="settingCountOptions">
+            <button type="button" class="btn-setting-chip" data-val="2">2個（1シート）</button>
+            <button type="button" class="btn-setting-chip" data-val="3">3個</button>
+            <button type="button" class="btn-setting-chip active" data-val="4">4個（2シート・標準）</button>
+            <button type="button" class="btn-setting-chip" data-val="6">6個（3シート）</button>
+          </div>
+          <div class="setting-custom-row">
+            <span>または直接入力：</span>
+            <input type="number" id="settingCustomCount" placeholder="4" min="1" max="20"> 個
+          </div>
+        </div>
+      </div>
+      <div class="settings-modal-footer">
+        <button id="btnSaveSettings" class="btn-save-settings">💾 せっていを ほぞんする</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== アラートポップアップ（「上限オーバー」等） ==================== -->
+  <div id="alertPopupOverlay" class="alert-popup-overlay">
+    <div class="alert-popup-box">
+      <div id="alertIconBig" class="alert-icon-big">⚠️</div>
+      <div id="alertMsgText" class="alert-msg-text">おおいよ！</div>
+      <div id="alertSubText" class="alert-sub-text">じょうけんを たしかめてね。</div>
+      <button id="btnAlertOk" class="btn-alert-ok">わかった！</button>
+    </div>
+  </div>
+
+  <!-- ==================== 切り取り（トリミング）モーダル ==================== -->
+  <div id="cropModalOverlay" class="crop-modal-overlay">
+    <div class="crop-modal-box">
+      <div class="crop-modal-header">
+        <h3 class="crop-modal-title">✂️ つかいたい ところに 四角を あわせてね！</h3>
+        <button id="btnCloseCropModal" class="btn-close-album">✕</button>
+      </div>
+
+      <!-- 切り取り操作エリア -->
+      <div class="crop-workspace-wrap" id="cropWorkspaceWrap">
+        <img id="cropSourceImage" src="" alt="切り取り元画像">
+        <!-- 移動・リサイズ可能な切り取り枠 -->
+        <div id="cropSelectionBox" class="crop-selection-box">
+          <div class="crop-corner top-left"></div>
+          <div class="crop-corner top-right"></div>
+          <div class="crop-corner bottom-left"></div>
+          <div class="crop-corner bottom-right"></div>
+          <div class="crop-drag-label">ここをきりとる</div>
+        </div>
+      </div>
+
+      <!-- 拡大・縮小・リセット補助ボタン -->
+      <div class="crop-helpers-row">
+        <button id="btnCropSmaller" class="btn-crop-tool">➖ ちいさく</button>
+        <button id="btnCropCenter" class="btn-crop-tool">🔄 まんなか</button>
+        <button id="btnCropLarger" class="btn-crop-tool">➕ おおきく</button>
+      </div>
+
+      <!-- 決定ボタン -->
+      <div class="crop-modal-footer">
+        <button id="btnCancelCrop" class="btn-retake">↩️ やめる</button>
+        <button id="btnConfirmCrop" class="btn-add-album" style="flex:2;">
+          ✂️ ここを きりとる！（けってい）
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- スクリプト -->
+  <script src="house-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
